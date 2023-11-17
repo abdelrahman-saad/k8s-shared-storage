@@ -62,6 +62,33 @@ volumes:
     claimName: mariadb-pvc
 ```
 
+# Running the Application
+
+First of all, start **minikube** using `minikube start`. to visualize the Kubernetes resources, run the following command `minikube dashboard`
+
+1- I used a new namespace to have all my resources which is called **test-ns** using the following command `kubectl create ns test-ns`.
+
+2- By now we have the minikube running, to run the application make sure you have all the files in the current directory and run the following command `kubectl apply -f . -n test-ns`
+
+3- This will create all resources on the namespace. you can connect to a pod using the dashboard we ran earlier. If you want to use kubectl, we can use `kubectl exec -it <pod-name> -n test-ns` replace <pod-name> with the name of the pod for example mariadb-0 or whatever the name you changed. you can always check pod names using `kubectl get pods -n test-ns`
+
+4- after connecting to the pod, please run the following command `apt-get update && apt-get install mysql-server -y` This command will install mysql-server to connect to MariaDB database. To connect to the database use the following command `mysql -h mariadb-service -u root -p` and then you are prompted to type in a password. decode the password provided and type it in
+
+
+5- Now you have the application running, and you can run SQL commands on one pod and can see the shared results when connecting to the database on the other pods.
+
+> [!NOTE]  
+> The root password is encoded base 64 and can be found in secret.yaml
+
+
+# Conclustion 
+
+We can infer that the usage of PV and linking it to the application using PVC is key to sharing a storage volume across the statefulset of the application. 
+
+There are other ways to share the volume with the replicas like: NFS server that could be running on the local machine or on Cloud Provider Storage and pass it to the application.
+
+In developing this, we thought that it might be conventional to run it locally with the help of PV and PVC to make it to the point with no further complications
+
 # Appreciation
 
 Thanks for following up and I hope you deployed your project as you wanted. In case of any inquiry, please contact me, you can find the contacts on my profile page here 😄 [Profile](https://github.com/abdelrahman-saad)
